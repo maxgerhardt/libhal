@@ -14,12 +14,27 @@
 
 module;
 
+// mp-units is consumed as HEADERS from the global module fragment, not as
+// `import mp_units`.
+//
+// GCC 15 cannot build mp-units as a C++20 module at all: mp-units-systems
+// dies with "recursive lazy load / failed to load pendings for
+// mp_units::detail::power_v". Reproduced with freestanding and hosted
+// configurations, with and without -fno-module-lazy, so it is a compiler bug
+// rather than a configuration mistake. Clang builds it fine, which is why
+// upstream has not hit this.
+//
+// Including the headers here attaches those entities to the global module.
+// They stay reachable through the aliases this partition exports, which is
+// the ordinary way to consume a header-only library from a module.
 #include <chrono>
 #include <cstdint>
 
-export module hal:units;
+#include <mp-units/framework.h>
+#include <mp-units/systems/angular.h>
+#include <mp-units/systems/si.h>
 
-export import mp_units;
+export module hal:units;
 
 using namespace mp_units;
 // using namespace mp_units::si::unit_symbols;
