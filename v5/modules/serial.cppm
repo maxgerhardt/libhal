@@ -16,11 +16,6 @@ module;
 
 #include <span>
 
-// See the note in units.cppm: mp-units comes in as headers, so every module
-// that names mp_units must include them itself.
-#include <mp-units/framework.h>
-#include <mp-units/systems/si.h>
-
 export module hal:serial;
 
 export import async_context;
